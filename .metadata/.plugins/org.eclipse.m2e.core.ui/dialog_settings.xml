@@ -6,6 +6,7 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\Administrator\Desktop\hotel-eclipse-backend"/>
 			<item value="C:\Users\Administrator\Pictures\Service-Backend\hotel-eclipse-backend"/>
 		</list>
 		<list key="projectNameTemplate">
