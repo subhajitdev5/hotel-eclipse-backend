@@ -22,7 +22,19 @@ public class UserService {
     }
 
     public UserModel createUser(UserModel user) {
-        return userRepository.save(user);
+        // Check if user already exists by email to prevent duplicates
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw new RuntimeException("User already exists with email: " + user.getEmail());
+        }
+
+        // Create a new UserModel to set firstName and lastName
+        UserModel newUser = new UserModel();
+        newUser.setFirstName(user.getFirstName()); // Expecting firstName
+        newUser.setLastName(user.getLastName());   // Expecting lastName
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(user.getPassword()); // Consider hashing this password
+
+        return userRepository.save(newUser);
     }
 
     public UserModel updateUser(Integer id, UserModel userDetails) {
@@ -31,7 +43,7 @@ public class UserService {
             user.setFirstName(userDetails.getFirstName());
             user.setLastName(userDetails.getLastName());
             user.setEmail(userDetails.getEmail());
-            user.setPassword(userDetails.getPassword());
+            user.setPassword(userDetails.getPassword()); // Consider hashing this password
             return userRepository.save(user);
         }
         return null;
@@ -46,16 +58,10 @@ public class UserService {
     }
     
     public boolean login(String email, String password) {
-		UserModel user = userRepository.findByEmail(email);
-		if (user==null) {
-            return false;
+        UserModel user = userRepository.findByEmail(email);
+        if (user == null) {
+            return false; // User does not exist
         } 
-		if(user.getPassword().equals(password))
-		{
-			return true;
-		}
-		else {
-            return false;
-        }
-	}
+        return user.getPassword().equals(password); // Check password
+    }
 }

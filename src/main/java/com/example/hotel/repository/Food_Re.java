@@ -6,5 +6,5 @@ import com.example.hotel.model.Food;
 
 
 public interface Food_Re extends JpaRepository<Food,Long> {
-
+//	Food findByEmail(String email); 
 }

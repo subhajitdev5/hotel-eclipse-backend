@@ -55,22 +55,33 @@ public class UserAuthController {
     }
 
     // Login API
+   
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody UserModel loginRequest) {
+    public ResponseEntity<?> login(@RequestBody UserModel loginRequest) {
         try {
-        	UserModel user = userService.getUserByEmail(loginRequest.getEmail());
-        	boolean res = userService.login(loginRequest.getEmail(),loginRequest.getPassword());
-        	if(res)
-        	{
-        		return new ResponseEntity<>(true,HttpStatus.OK);
-        	}
-        else {
-        	return new ResponseEntity<>(false,HttpStatus.UNAUTHORIZED);
+            // Validate input
+            if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+                return ResponseEntity.badRequest().body("Email and password must not be empty.");
+            }
+
+            UserModel user = userService.getUserByEmail(loginRequest.getEmail());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+            }
+
+            boolean validPassword = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+            if (validPassword) {
+                // Return user data or a token if applicable
+                return ResponseEntity.ok(user); // You can return user details or a token here
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+            }
+        } catch (Exception e) {
+            // Log the exception (consider using a logging framework)
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login.");
         }
-        }catch(Exception e)
-        	{
-        		return new ResponseEntity<>(false,HttpStatus.INTERNAL_SERVER_ERROR);
-        	}
-        
     }
+
+
 }

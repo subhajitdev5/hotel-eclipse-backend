@@ -10,4 +10,5 @@ import com.example.hotel.model.Room;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 //	List<Room> findByAvailableTrue();
+//	RoomRepository findByEmail(String email);
 }

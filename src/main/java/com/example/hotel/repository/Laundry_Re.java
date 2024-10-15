@@ -7,5 +7,5 @@ import com.example.hotel.model.Laundry;
 
 
 public interface Laundry_Re extends JpaRepository<Laundry,Long> {
-
+//	Laundry findByEmail(String email);
 }
